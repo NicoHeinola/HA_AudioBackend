@@ -33,7 +33,7 @@ class HATextToSpeechAPI(HomeAssistantAPI):
         if not tts_url:
             raise Exception("TTS URL not found in response.")
 
-        tts_response = requests.get(f"{self._ha_url}{tts_url}", headers=self._authorization_header)
+        tts_response = requests.get(tts_url, headers=self._authorization_header)
         if tts_response.status_code != 200:
             raise Exception(f"Failed to retrieve TTS audio file: {tts_response.text}")
 
