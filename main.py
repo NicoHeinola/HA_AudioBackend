@@ -1,8 +1,11 @@
+import logging
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
 import uvicorn
 from routes.index import router as index_router
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
 app = FastAPI()
 
