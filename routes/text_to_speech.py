@@ -24,6 +24,20 @@ def text_to_speech(token: str = require_auth(), body: dict = Body(...)):
         tts_api = HATextToSpeechAPI(ha_url, ha_token)
         tts_result = tts_api.convert_text_to_speech(engine_id, message)
 
-        return Response(content=tts_result["content"], media_type=f"audio/{tts_result['format']}")
+        # Return the audio data as a proper Response with correct content type
+        audio_content = tts_result.get("content", b"")
+        audio_format = tts_result.get("format", "mpeg")
+
+        # Set appropriate content type based on format
+        content_type = f"audio/{audio_format}"
+
+        return Response(
+            content=audio_content,
+            media_type=content_type,
+            headers={
+                "Content-Disposition": f"attachment; filename=tts_audio.{audio_format}",
+                "Content-Length": str(len(audio_content)),
+            },
+        )
     except Exception as e:
         return Response(content=str(e), status_code=500)
