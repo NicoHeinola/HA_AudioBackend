@@ -42,7 +42,7 @@ class VoskSpeechToTextHelper:
         self._model = Model(model_path)
         self._recognizer = KaldiRecognizer(self._model, 16000)
 
-    def convert_speech_to_text(self, audio_bytes: bytes) -> str:
+    def convert_speech_to_text(self, audio_bytes: bytes) -> dict:
         """
         Convert speech audio bytes to text transcription
 
@@ -53,14 +53,17 @@ class VoskSpeechToTextHelper:
             Transcribed text
         """
         if not audio_bytes:
-            return ""
+            return {"text": "", "is_partial": False}
 
         if not self._recognizer.AcceptWaveform(audio_bytes):
             result = self._recognizer.PartialResult()
         else:
             result = self._recognizer.Result()
 
-        result_dict = json.loads(result)
-        transcription = result_dict.get("text", "")
+        result_dict: dict = json.loads(result)
+        speech_as_text: str = result_dict.get("text", "")
 
-        return transcription
+        if not speech_as_text:
+            speech_as_text = result_dict.get("partial", "")
+
+        return {"text": speech_as_text, "is_partial": result_dict.get("partial", "") != ""}
