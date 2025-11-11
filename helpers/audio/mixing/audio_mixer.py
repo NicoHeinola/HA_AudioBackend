@@ -5,11 +5,16 @@ from pydub import AudioSegment
 class AudioMixer:
     @staticmethod
     def speed_up_audio(
-        input_file_path: str,
-        output_file_path: str,
+        input_audio_bytes: bytes,
         speed: float,
-    ) -> None:
+    ) -> bytes:
         """Speed up audio file using ffmpeg."""
-        audio = AudioSegment.from_file(input_file_path)
+        audio = AudioSegment(data=input_audio_bytes)
         sped_up_audio: AudioSegment = speedup(audio, playback_speed=speed)
-        sped_up_audio.export(output_file_path, format="mp3")
+
+        raw_data: bytes | None = sped_up_audio.raw_data
+
+        if not raw_data:
+            raise ValueError("Failed to speed up audio.")
+
+        return raw_data

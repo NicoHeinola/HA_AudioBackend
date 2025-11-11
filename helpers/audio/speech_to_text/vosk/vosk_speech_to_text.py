@@ -14,7 +14,7 @@ SetLogLevel(-1)
 logger = logging.getLogger(__name__)
 
 
-class VoskSpeechToTextHelper:
+class VoskSpeechToText:
     """
     Local speech-to-text recognition using Vosk
     - Fully offline (no internet required)

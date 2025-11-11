@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter, File, Form, Response, UploadFile
 
-from helpers.audio.speech_to_text.vosk.vosk_speech_to_text_helper import VoskSpeechToTextHelper
+from helpers.audio.speech_to_text.vosk.vosk_speech_to_text import VoskSpeechToText
 from middleware.auth import require_auth
 
 router = APIRouter()
@@ -15,7 +15,7 @@ def speech_to_text(token: str = require_auth(), model: str = Form(None), file: U
     model = model or os.getenv("SPEECH_TO_TEXT_DEFAULT_MODEL", "")
 
     try:
-        speech_to_text_helper: VoskSpeechToTextHelper = VoskSpeechToTextHelper(model)
+        speech_to_text_helper: VoskSpeechToText = VoskSpeechToText(model)
         audio_bytes = file.file.read()
         speech_as_text: dict = speech_to_text_helper.convert_speech_to_text(audio_bytes)
 
