@@ -9,14 +9,22 @@ router = APIRouter()
 
 
 @router.post("/speed-up")
-def speech_to_text(token: str = require_auth(), speed: int = Form(...), file: UploadFile = File(...)):
+def speech_to_text(token: str = require_auth(), speed: str | float = Form(...), file: UploadFile = File(...)):
     """
     Endpoint to convert speech audio to text.
     """
 
-    sped_up_audio: bytes = AudioMixer.speed_up_audio(file.file.read(), speed)
+    speed = float(speed)
 
-    audio_format: str = "mp3"
+    if speed < 1.0:
+        return Response(
+            content="Speed must be greater than or equal to 1.0",
+            status_code=422,
+        )
+
+    sped_up_audio: bytes = AudioMixer.speed_up_audio(file.file.read(), speed, output_format="wav")
+
+    audio_format: str = "wav"
     if file.filename is not None:
         file.filename.split(".")[-1]
 
@@ -25,7 +33,7 @@ def speech_to_text(token: str = require_auth(), speed: int = Form(...), file: Up
         content=sped_up_audio,
         media_type=content_type,
         headers={
-            "Content-Disposition": f"attachment; filename=tts_audio.{audio_format}",
+            "Content-Disposition": f"attachment; filename=tts_audio_sped_up.{audio_format}",
             "Content-Length": str(len(sped_up_audio)),
         },
     )
