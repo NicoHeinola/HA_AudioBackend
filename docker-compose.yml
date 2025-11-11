@@ -10,4 +10,7 @@ services:
     env_file:
       - .env
 
+    volumes:
+    - ./models:/app/models
+
     network_mode: host

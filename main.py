@@ -5,6 +5,7 @@ from fastapi import FastAPI
 import uvicorn
 from routes.index import router as index_router
 from routes.text_to_speech import router as text_to_speech_router
+from routes.speech_to_text import router as speech_to_text_router
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
@@ -13,6 +14,7 @@ app = FastAPI()
 # Include routes
 app.include_router(index_router)
 app.include_router(text_to_speech_router, prefix="/text-to-speech")
+app.include_router(speech_to_text_router, prefix="/speech-to-text")
 
 if __name__ == "__main__":
     load_dotenv()
