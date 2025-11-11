@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 import uvicorn
 from routes.index import router as index_router
-from routes.text_to_speech import router as text_to_speech_router
-from routes.speech_to_text import router as speech_to_text_router
-from routes.mixer import router as mixer_router
+from routes.text_to_speech_routes import router as text_to_speech_router
+from routes.speech_to_text_routes import router as speech_to_text_router
+from routes.mixer_routes import router as mixer_router
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
