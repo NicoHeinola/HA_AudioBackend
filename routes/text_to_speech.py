@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter, Body, Response
 
-from helpers.audio.ha_text_to_speech_api import HATextToSpeechAPI
+from helpers.audio.text_to_speech.ha_text_to_speech_api import HATextToSpeechAPI
 from middleware.auth import require_auth
 
 router = APIRouter()

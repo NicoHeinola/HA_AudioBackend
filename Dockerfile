@@ -1,10 +1,14 @@
-FROM python:3.12-slim
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Build wheels for Python dependencies in a separate stage to keep the final image small
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM builder AS final
+
+WORKDIR /app
 
 # Copy application code
 COPY . .
