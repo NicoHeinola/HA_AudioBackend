@@ -15,9 +15,12 @@ def speech_to_text(token: str = require_auth(), model: str = Form(None), file: U
     model = model or os.getenv("SPEECH_TO_TEXT_DEFAULT_MODEL", "")
 
     try:
-        speech_to_text_helper: VoskSpeechToText = VoskSpeechToText(model)
+        speech_to_text_helper: VoskSpeechToText | None = VoskSpeechToText(model)
         audio_bytes = file.file.read()
         speech_as_text: dict = speech_to_text_helper.convert_speech_to_text(audio_bytes)
+
+        # Free up memory
+        speech_to_text_helper = None
 
         return speech_as_text
     except Exception as e:
