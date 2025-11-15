@@ -26,8 +26,6 @@ def speech_to_text(token: str = require_auth(), speed: str | float = Form(...), 
         audio_bytes = file.file.read()
         sped_up_audio: bytes = AudioMixer.speed_up_audio(audio_bytes, speed, output_format="wav")
     except ValueError as exc:
-        print(exc)
-
         return Response(
             content=str(exc),
             status_code=422,
