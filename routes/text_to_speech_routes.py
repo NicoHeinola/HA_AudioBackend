@@ -1,8 +1,11 @@
+import logging
 import os
 from fastapi import APIRouter, Body, Response
 
 from helpers.audio.text_to_speech.home_assistant.ha_text_to_speech_api import HATextToSpeechAPI
 from middleware.auth import require_auth
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -23,7 +26,12 @@ def text_to_speech(token: str = require_auth(), body: dict = Body(...)):
         ha_url: str = f"{ha_host}:{ha_port}"
 
         tts_api = HATextToSpeechAPI(ha_url, ha_token)
-        tts_result = tts_api.convert_text_to_speech(engine_id, message)
+
+        try:
+            tts_result = tts_api.convert_text_to_speech(engine_id, message)
+        except Exception as e:
+            logger.error(f"Text-to-Speech conversion failed: {str(e)}")
+            return Response(content=f"Text-to-Speech conversion failed: {str(e)}", status_code=500)
 
         # Return the audio data as a proper Response with correct content type
         audio_content = tts_result.get("content", b"")
